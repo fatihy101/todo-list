@@ -16,6 +16,9 @@ export default {
 </script>
 
 <style lang="scss">
+body {
+  background: #2c3e50;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -25,8 +28,11 @@ export default {
   margin-top: 60px;
 }
 .container {
-  width: 960px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  width: 80vw;
   margin: auto auto;
-  padding: 0 15px;
+  padding: 0 30px;
 }
 </style>
