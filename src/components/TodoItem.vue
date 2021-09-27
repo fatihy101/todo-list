@@ -43,31 +43,43 @@ export default {
   text-decoration: line-through;
 }
 .success {
-  background: #a5d6a7 !important;
+  background: #EABB78 !important;
+}
+.todo-item:hover {
+  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.14);
+
 }
 .todo-item {
   display: flex;
-  background: #EEE;
-  margin: 10px 2vw 10px 1vw;
+  background: #EFEFEF;
+  margin: 15px 2vw 10px 1vw;
   border-radius: 30px;
-  box-shadow: 0 6px 4px 0 rgba(0, 0, 0, 0.14);
+  box-shadow: 0 8px 6px 0 rgba(0, 0, 0, 0.18);
   align-items: center;
   justify-content: space-between;
   padding: 0.5rem;
   border-bottom: 1px solid #ccc;
   width: 51vw;
+  transition: all 0.2s ease-in-out;
+
 
   &__text {
     font-weight: 700;
     color: black;
+    font-size: 1.2rem;
+  }
+  &__checkbox {
+    margin-left: 15px;
+    transform: scale(1.4);
   }
 
   &__delete-button {
     border: none;
     background: none;
-    color: rgb(217, 61, 61);
-    font-size: 1.5rem;
+    color: #B75A5A;
+    font-size: 1.7rem;
     cursor: pointer;
+    margin-right: 15px;
   }
 }
 </style>

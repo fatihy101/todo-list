@@ -15,6 +15,12 @@ describe("TodoList.vue", () => {
                     completed: false
                 }]
             },
+            mutations: {
+                // Added for testing 'no-item' state
+                clearTodo(state) {
+                    state.todos = []
+                }
+            },
             getters: {
                 todos: state => state.todos
             },
@@ -33,5 +39,11 @@ describe("TodoList.vue", () => {
 
     it("renders a list of todos", () => {
         expect(wrapper.findAll(".todo-item").length).toBe(1)
+    })
+
+    it("should render a text when there's no item", async () => {
+        await store.commit("clearTodo")
+        const noItemText = wrapper.find(".no-item__text").text()
+        expect(noItemText).toBe("Your todo list is empty. Add new todos!")
     })
 })

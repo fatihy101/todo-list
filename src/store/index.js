@@ -31,8 +31,12 @@ export default createStore({
   },
   mutations: mutations,
   actions: {
-    addTodo({ commit }, todo) {
-      commit('ADD_TODO', todo)
+    addTodo({ commit }, todoText) {
+      commit('ADD_TODO', {
+        id: Math.random() * 100000 + 1,
+        text: todoText,
+        completed: false
+      })
     },
     removeTodo({ commit }, todo) {
       commit('REMOVE_TODO', todo)
