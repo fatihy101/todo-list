@@ -47,7 +47,6 @@ export default {
 }
 .todo-item:hover {
   box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.14);
-
 }
 .todo-item {
   display: flex;
@@ -60,9 +59,6 @@ export default {
   padding: 0.5rem;
   border-bottom: 1px solid #ccc;
   width: 51vw;
-  transition: all 0.2s ease-in-out;
-
-
   &__text {
     font-weight: 700;
     color: black;
@@ -76,10 +72,11 @@ export default {
   &__delete-button {
     border: none;
     background: none;
-    color: #B75A5A;
-    font-size: 1.7rem;
+    color: #B24040;
+    font-size: 1.5rem;
     cursor: pointer;
     margin-right: 15px;
+    font-weight: 700;
   }
 }
 </style>

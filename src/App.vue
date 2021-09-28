@@ -1,16 +1,29 @@
 <template>
+  <Navbar />
   <div class="container">
+    <TodoInput />
     <TodoList />
   </div>
 </template>
 
 <script>
 import TodoList from '@/components/TodoList.vue'
+import TodoInput from '@/components/TodoInput.vue'
+import Navbar from '@/components/Navbar.vue'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'App',
   components: {
-    TodoList
+    TodoList,
+    TodoInput,
+    Navbar
+  },
+  methods: {
+    ...mapActions({setUserId: 'setUserId'})
+  },
+  created() {
+    this.setUserId()
   }
 }
 </script>

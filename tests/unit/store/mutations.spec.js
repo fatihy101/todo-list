@@ -1,6 +1,4 @@
-import { mutations } from '@/store'
-
-const { ADD_TODO, REMOVE_TODO, UPDATE_TODO, CLEAR_TODOS, FETCH_TODOS } = mutations
+import mutations from '@/store/mutations.js'
 
 describe('mutations', () => {
     it('should add a new todo item', () => {
@@ -8,7 +6,7 @@ describe('mutations', () => {
             todos: []
         }
 
-        ADD_TODO(state, {
+        mutations.ADD_TODO(state, {
             id: 1,
             text: 'test',
             completed: false
@@ -30,7 +28,7 @@ describe('mutations', () => {
             }]
         }
 
-        REMOVE_TODO(state, 1)
+        mutations.REMOVE_TODO(state, 1)
 
         expect(state.todos).toEqual([])
     })
@@ -44,7 +42,7 @@ describe('mutations', () => {
             }]
         }
 
-        UPDATE_TODO(state, {
+        mutations.UPDATE_TODO(state, {
             id: 1,
             text: 'test',
             completed: true
@@ -66,7 +64,7 @@ describe('mutations', () => {
             }]
         }
 
-        CLEAR_TODOS(state)
+        mutations.CLEAR_TODOS(state)
 
         expect(state.todos).toEqual([])
     })
@@ -89,7 +87,17 @@ describe('mutations', () => {
             }
         ]
 
-        FETCH_TODOS(state, data)
+        mutations.FETCH_TODOS(state, data)
         expect(state.todos).toEqual(data)
+    })
+
+    it('should set the userId', () => {
+        const state = {
+            userId: null
+        }
+        const data = "testID"
+
+        mutations.SET_USER_ID(state, data)
+        expect(state.userId).toEqual(data)
     })
 })
