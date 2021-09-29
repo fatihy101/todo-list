@@ -1,0 +1,155 @@
+{
+  "consumer": {
+    "name": "todo-client"
+  },
+  "provider": {
+    "name": "todo-service"
+  },
+  "interactions": [
+    {
+      "description": "a request for todos",
+      "providerState": "there are 2 todos",
+      "request": {
+        "method": "GET",
+        "path": "/todos",
+        "headers": {
+          "Accept": "application/json",
+          "X-User-Id": "Do9030213a-8d03-4e8d-aae2-762989d54399tO"
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "body": {
+          "todos": [
+            {
+              "id": 1,
+              "title": "Buy milk",
+              "userId": "Do9030213a-8d03-4e8d-aae2-762989d54399tO",
+              "completed": false
+            },
+            {
+              "id": 2,
+              "title": "Buy eggs",
+              "userId": "Do9030213a-8d03-4e8d-aae2-762989d54399tO",
+              "completed": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "a request for todos",
+      "providerState": "there are no todos",
+      "request": {
+        "method": "GET",
+        "path": "/todos",
+        "headers": {
+          "Accept": "application/json",
+          "X-User-Id": "Do9030213a-8d03-4e8d-aae2-762989d54399tO"
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "body": {
+          "todos": [
+
+          ]
+        }
+      }
+    },
+    {
+      "description": "a request to add a todo item",
+      "providerState": "a todo item is added",
+      "request": {
+        "method": "POST",
+        "path": "/todos",
+        "headers": {
+          "Accept": "application/json",
+          "X-User-Id": "Do9030213a-8d03-4e8d-aae2-762989d54399tO"
+        },
+        "body": {
+          "id": 5,
+          "title": "Buy some milk",
+          "completed": false,
+          "userId": "Do9030213a-8d03-4e8d-aae2-762989d54399tO"
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "body": {
+          "success": true
+        }
+      }
+    },
+    {
+      "description": "a request to add a todo item",
+      "providerState": "a todo item is not added",
+      "request": {
+        "method": "POST",
+        "path": "/todos",
+        "headers": {
+          "Accept": "application/json",
+          "X-User-Id": "Do9030213a-8d03-4e8d-aae2-762989d54399tO"
+        },
+        "body": {
+          "id": 5,
+          "title": "",
+          "completed": false,
+          "userId": "Do9030213a-8d03-4e8d-aae2-762989d54399tO"
+        }
+      },
+      "response": {
+        "status": 400,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "body": {
+          "success": false,
+          "error": "Validation failed: Title can't be blank"
+        }
+      }
+    },
+    {
+      "description": "a request to add a todo item",
+      "providerState": "header userId and item userId isn't same",
+      "request": {
+        "method": "POST",
+        "path": "/todos",
+        "headers": {
+          "Accept": "application/json",
+          "X-User-Id": "Do9030213a-8d03-4e8d-aae2-762989d54399tO"
+        },
+        "body": {
+          "id": 6,
+          "title": "Buy some milk",
+          "completed": false,
+          "userId": "3127637621763a"
+        }
+      },
+      "response": {
+        "status": 401,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "body": {
+          "success": false,
+          "error": "Validation failed: Header userId and item's userId must be same"
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}
