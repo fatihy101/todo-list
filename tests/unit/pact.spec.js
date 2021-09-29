@@ -205,6 +205,146 @@ describe('Todo Service', () => {
         })
     })
 
+    describe('Updating todo item', () => {
+        it('should update a todo item', async () => {
+            const expectedResponse = {
+                "success": true
+            }
+
+            const requestbody = {
+                id: 1,
+                title: 'Buy some milk',
+                completed: true,
+                userId: userId,
+            }
+
+            mockProvider.addInteraction({
+                state: 'a todo item is updated',
+                uponReceiving: 'a request to update a todo item',
+                withRequest: {
+                    method: 'PUT',
+                    path: '/todos',
+                    headers: requestHeaders,
+                    body: requestbody,
+                },
+                willRespondWith: {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    },
+                    body: expectedResponse
+                }
+            })
+
+            const response = await TodoRequests.updateTodo(baseUrl, userId, requestbody)
+            expect(response.data).toEqual(expectedResponse)
+        })
+
+        it('should return an error when updating a todo item', async () => {
+            const expectedResponse = {
+                "success": false,
+                "error": "Validation failed: Title can't be blank"
+            }
+
+            const requestbody = {
+                id: 1,
+                title: '',
+                completed: false,
+                userId: userId,
+            }
+
+            mockProvider.addInteraction({
+                state: 'a todo item is not updated',
+                uponReceiving: 'a request to update a todo item',
+                withRequest: {
+                    method: 'PUT',
+                    path: '/todos',
+                    headers: requestHeaders,
+                    body: requestbody,
+                },
+                willRespondWith: {
+                    status: 400,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    },
+                    body: expectedResponse
+                }
+            })
+            try {
+                const response = await TodoRequests.updateTodo(baseUrl, userId, requestbody)
+            } catch(error) {
+                expect(error.response.data).toEqual(expectedResponse)
+                expect(error.response.status).toEqual(400)
+            }
+        })
+    })
+
+    describe('Deleting todo item', () => {
+        const todoId = 1
+
+        it('should delete a todo item', async () => {
+            const expectedResponse = {
+                "success": true
+            }
+
+            const requestbody = {
+                id: 1,
+                title: 'Buy some milk',
+                completed: true,
+                userId: userId,
+            }
+
+            mockProvider.addInteraction({
+                state: 'a todo item is deleted',
+                uponReceiving: 'a request to delete a todo item',
+                withRequest: {
+                    method: 'DELETE',
+                    path: `/todos/${todoId}`,
+                    headers: requestHeaders
+                },
+                willRespondWith: {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    },
+                    body: expectedResponse
+                }
+            })
+
+            const response = await TodoRequests.deleteTodo(baseUrl, userId, todoId)
+            expect(response.data).toEqual(expectedResponse)
+        })
+
+        it('should return an error when deleting a todo item due to non-matching userId', async () => {
+            const expectedResponse = {
+                "success": false,
+                "error": "Authorization failed: You're unauthorized to delete this todo item"
+            }
+
+            mockProvider.addInteraction({
+                state: 'a todo item is not deleted',
+                uponReceiving: 'a request to delete a todo item',
+                withRequest: {
+                    method: 'DELETE',
+                    path: `/todos/${todoId}`,
+                    headers: requestHeaders
+                },
+                willRespondWith: {
+                    status: 401,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    },
+                    body: expectedResponse
+                }
+            })
+            try {
+                const response = await TodoRequests.deleteTodo(baseUrl, userId, todoId)
+            } catch(error) {
+                expect(error.response.data).toEqual(expectedResponse)
+                expect(error.response.status).toEqual(401)
+            }
+        })
+    })
 })
 
 
