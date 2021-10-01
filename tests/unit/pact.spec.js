@@ -5,7 +5,7 @@ import TodoRequests from '@/utils/TodoRequests'
 const mockProvider = new Pact({
     consumer: 'todo-client',
     provider: 'todo-service',
-    port: 1234,
+    port: 4000,
     log: path.resolve(process.cwd(), 'logs', 'pact.log'),
     dir: path.resolve(process.cwd(), 'pacts'),
     spec: 2,
@@ -13,7 +13,7 @@ const mockProvider = new Pact({
     pactfileWriteMode: 'overwrite' // Options: overwrite, update, merge
 })
 
-const baseUrl = 'http://localhost:1234'
+const baseUrl = 'http://localhost:4000'
 
 describe('Todo Service', () => {
     beforeAll(() => mockProvider.setup())

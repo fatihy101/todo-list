@@ -8,12 +8,14 @@
     "test:unit": "vue-cli-service test:unit",
     "test:unit:v": "vue-cli-service test:unit --verbose false",
     "test:e2e": "vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "pact:publish": "pact-broker publish pacts/ --consumer-app-version=\"$(npx @pact-foundation/absolute-version)\" --tag-with-git-branch --broker-base-url=http://192.168.1.89:9292"
   },
   "dependencies": {
     "@pact-foundation/pact": "^9.16.1",
     "axios": "^0.21.4",
     "core-js": "^3.6.5",
+    "moxios": "^0.4.0",
     "vue": "^3.0.0",
     "vue-uuid": "^2.0.2",
     "vuex": "^4.0.0-0"
@@ -69,7 +71,12 @@
     "preset": "@vue/cli-plugin-unit-jest",
     "transform": {
       "^.+\\.vue$": "vue-jest"
-    }
+    },
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.{js,vue}",
+      "!src/main.js"
+    ]
   },
   "config": {
     "pact_do_not_track": true
