@@ -1,16 +1,16 @@
 {
   "name": "todo-list",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.2.0",
+  "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test:unit:v": "vue-cli-service test:unit --verbose false",
-    "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
-    "pact:publish": "pact-broker publish pacts/ --consumer-app-version=\"$(npx @pact-foundation/absolute-version)\" --tag-with-git-branch --broker-base-url=http://192.168.1.89:9292"
+    "pact:publish": "pact-broker publish pacts/ --consumer-app-version=\"$(npx @pact-foundation/absolute-version)\" --tag-with-git-branch --broker-base-url=https://fatihy.pactflow.io --broker-token=HW1NX8ihy5dv5XUQzt3gpA"
   },
+  "proxy": "http://localhost:4000",
   "dependencies": {
     "@pact-foundation/pact": "^9.16.1",
     "axios": "^0.21.4",
@@ -22,7 +22,6 @@
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-e2e-cypress": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-plugin-unit-jest": "~4.5.0",
     "@vue/cli-plugin-vuex": "~4.5.0",

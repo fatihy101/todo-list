@@ -2,12 +2,23 @@ import { uuid } from 'vue-uuid'
 import TodoRequests from '../utils/TodoRequests'
 const apiURL = process.env.VUE_APP_API_URL
 export default {
-  setUserId({ commit }) {
+  async setUserId({ commit, state }) {
     // check if userId is exists on localStorage
     const userId = localStorage.getItem('userId')
     if (userId) {
       // TODO: Check userId is valid
       commit('SET_USER_ID', localStorage.getItem('userId'))
+      if(state.todos.length === 0) {
+        try {
+          const res = await TodoRequests.getTodos(apiURL, state.userId)
+
+          if(res.status === 200) {
+            commit('FETCH_TODOS', res.data)
+          }
+        } catch(error) {
+          console.log("Error on setUser's getTodos", error)
+        }
+      }
     } else {
       // create new userId and save localStorage
       const userId = 'Do' + uuid.v4() + 'tO'
@@ -18,7 +29,7 @@ export default {
 
   async addTodo({ commit, state }, todoText) {
     const newTodo = {
-      id: (Math.random() * 100000 + 1).toFixed(0),
+      id: ((Math.random() * 100000 + 1).toFixed(0)).toString(),
       userId: state.userId,
       text: todoText,
       completed: false
@@ -57,10 +68,12 @@ export default {
   async fetchTodos({ commit, state }) {
     try {
       const response = await TodoRequests.getTodos(apiURL, state.userId)
+      if(response.status === 200) {
       const todos = JSON.parse(response)
       commit('FETCH_TODOS', todos)
+      }
     } catch (error) {
-      console.error(error)
+      console.log(error.response.status)
     }
   }
 }

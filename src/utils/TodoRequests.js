@@ -10,12 +10,15 @@ class TodoRequests {
 
   static getTodos(baseUrl, userId) {
     return axios.get(`${baseUrl}/todos`, {
-        headers: this.createHeaders(userId)
+        headers: this.createHeaders(userId),
+        validateStatus: function (status) {
+          return status < 500; // Reject only if the status code is greater than or equal to 500
+        },
     })
   }
 
   static addTodo(baseUrl, userId, todo) {
-    return axios.post(`${baseUrl}/todos`, todo, {
+    return axios.post(`${baseUrl}/todos`, JSON.stringify(todo), {
         headers: this.createHeaders(userId)
     })
   }

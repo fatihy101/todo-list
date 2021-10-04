@@ -3,8 +3,8 @@ import path from 'path'
 import TodoRequests from '@/utils/TodoRequests'
 
 const mockProvider = new Pact({
-    consumer: 'todo-client',
-    provider: 'todo-service',
+    consumer: 'Todo Client',
+    provider: 'Todo API',
     port: 4000,
     log: path.resolve(process.cwd(), 'logs', 'pact.log'),
     dir: path.resolve(process.cwd(), 'pacts'),
@@ -14,6 +14,8 @@ const mockProvider = new Pact({
 })
 
 const baseUrl = 'http://localhost:4000'
+
+jest.setTimeout(60000)
 
 describe('Todo Service', () => {
     beforeAll(() => mockProvider.setup())
@@ -25,20 +27,205 @@ describe('Todo Service', () => {
         'Accept': 'application/json',
         'X-User-Id': userId
     }
+    describe('Adding todo item', () => {
+        it('should add a todo item', async () => {
+            const expectedResponse = {
+                "success": true
+            }
+
+            const requestbody = {
+                id: "10",
+                text: 'Buy some milk',
+                completed: false,
+                userId: userId,
+            }
+
+            mockProvider.addInteraction({
+                state: 'a todo item is added',
+                uponReceiving: 'a request to add a todo item',
+                withRequest: {
+                    method: 'POST',
+                    path: '/todos',
+                    headers: requestHeaders,
+                    body: requestbody,
+                },
+                willRespondWith: {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    },
+                    body: expectedResponse
+                }
+            })
+
+            const response = await TodoRequests.addTodo(baseUrl, userId, requestbody)
+            expect(response.data).toEqual(expectedResponse)
+        })
+
+        it('should return an error when adding a todo item', async () => {
+            const expectedResponse = {
+                "success": false,
+                "error": "Validation failed: Text can't be blank"
+            }
+
+            const requestbody = {
+                id: "10",
+                text: '',
+                completed: false,
+                userId: userId,
+            }
+
+            mockProvider.addInteraction({
+                state: 'a todo item is not added',
+                uponReceiving: 'a request to add a todo item',
+                withRequest: {
+                    method: 'POST',
+                    path: '/todos',
+                    headers: requestHeaders,
+                    body: requestbody,
+                },
+                willRespondWith: {
+                    status: 400,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    },
+                    body: expectedResponse
+                }
+            })
+            try {
+                const response = await TodoRequests.addTodo(baseUrl, userId, requestbody)
+            } catch(error) {
+                expect(error.response.data).toEqual(expectedResponse)
+                expect(error.response.status).toEqual(400)
+            }
+        })
+
+        it('should return an error when adding a todo item with an invalid userId', async () => {
+            const expectedResponse = {
+                "success": false,
+                "error": "validation failed: Header userId and item's userId must be same"
+            }
+
+            const requestbody = {
+                id: "10",
+                text: 'Buy some milk',
+                completed: false,
+                userId: '3127637621763a',
+            }
+
+            mockProvider.addInteraction({
+                state: 'header userId and item userId isn\'t same',
+                uponReceiving: 'a request to add a todo item',
+                withRequest: {
+                    method: 'POST',
+                    path: '/todos',
+                    headers: requestHeaders,
+                    body: requestbody,
+                },
+                willRespondWith: {
+                    status: 401,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    },
+                    body: expectedResponse
+                }
+            })
+            try {
+                const response = await TodoRequests.addTodo(baseUrl, userId, requestbody)
+            } catch(error) {
+                expect(error.response.data).toEqual(expectedResponse)
+                expect(error.response.status).toEqual(401)
+            }
+        })
+    })
+
+    describe('Updating todo item', () => {
+        it('should update a todo item', async () => {
+            const expectedResponse = {
+                "success": true
+            }
+
+            const requestbody = {
+                id: "10",
+                text: 'Buy some milk',
+                completed: true,
+                userId: userId,
+            }
+
+            mockProvider.addInteraction({
+                state: 'a todo item is updated',
+                uponReceiving: 'a request to update a todo item',
+                withRequest: {
+                    method: 'PUT',
+                    path: '/todos',
+                    headers: requestHeaders,
+                    body: requestbody,
+                },
+                willRespondWith: {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    },
+                    body: expectedResponse
+                }
+            })
+
+            const response = await TodoRequests.updateTodo(baseUrl, userId, requestbody)
+            expect(response.data).toEqual(expectedResponse)
+        })
+
+        it('should return an error when updating a todo item', async () => {
+            const expectedResponse = {
+                "success": false,
+                "error": "Validation failed: Text can't be blank"
+            }
+
+            const requestbody = {
+                id: "10",
+                text: '',
+                completed: false,
+                userId: userId,
+            }
+
+            mockProvider.addInteraction({
+                state: 'a todo item is not updated',
+                uponReceiving: 'a request to update a todo item',
+                withRequest: {
+                    method: 'PUT',
+                    path: '/todos',
+                    headers: requestHeaders,
+                    body: requestbody,
+                },
+                willRespondWith: {
+                    status: 400,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    },
+                    body: expectedResponse
+                }
+            })
+            try {
+                const response = await TodoRequests.updateTodo(baseUrl, userId, requestbody)
+            } catch(error) {
+                expect(error.response.data).toEqual(expectedResponse)
+                expect(error.response.status).toEqual(400)
+            }
+        })
+    })
 
     describe('Getting all todos', () => {
         it('should return a list of todos', async () => {
             const expectedResponse = {
                 todos: [
                     {
-                        id: 1,
-                        title: 'Buy milk',
+                        id: "20",
+                        text: 'Buy milk',
                         userId: userId,
                         completed: false
                     },
                     {
-                        id: 2,
-                        title: 'Buy eggs',
+                        id: "21",
+                        text: 'Buy eggs',
                         userId: userId,
                         completed: false
                     }
@@ -93,191 +280,6 @@ describe('Todo Service', () => {
         })
     })
 
-    describe('Adding todo item', () => {
-        it('should add a todo item', async () => {
-            const expectedResponse = {
-                "success": true
-            }
-
-            const requestbody = {
-                id: 5,
-                title: 'Buy some milk',
-                completed: false,
-                userId: userId,
-            }
-
-            mockProvider.addInteraction({
-                state: 'a todo item is added',
-                uponReceiving: 'a request to add a todo item',
-                withRequest: {
-                    method: 'POST',
-                    path: '/todos',
-                    headers: requestHeaders,
-                    body: requestbody,
-                },
-                willRespondWith: {
-                    status: 200,
-                    headers: {
-                        'Content-Type': 'application/json; charset=utf-8'
-                    },
-                    body: expectedResponse
-                }
-            })
-
-            const response = await TodoRequests.addTodo(baseUrl, userId, requestbody)
-            expect(response.data).toEqual(expectedResponse)
-        })
-
-        it('should return an error when adding a todo item', async () => {
-            const expectedResponse = {
-                "success": false,
-                "error": "Validation failed: Title can't be blank"
-            }
-
-            const requestbody = {
-                id: 5,
-                title: '',
-                completed: false,
-                userId: userId,
-            }
-
-            mockProvider.addInteraction({
-                state: 'a todo item is not added',
-                uponReceiving: 'a request to add a todo item',
-                withRequest: {
-                    method: 'POST',
-                    path: '/todos',
-                    headers: requestHeaders,
-                    body: requestbody,
-                },
-                willRespondWith: {
-                    status: 400,
-                    headers: {
-                        'Content-Type': 'application/json; charset=utf-8'
-                    },
-                    body: expectedResponse
-                }
-            })
-            try {
-                const response = await TodoRequests.addTodo(baseUrl, userId, requestbody)
-            } catch(error) {
-                expect(error.response.data).toEqual(expectedResponse)
-                expect(error.response.status).toEqual(400)
-            }
-        })
-
-        it('should return an error when adding a todo item with an invalid userId', async () => {
-            const expectedResponse = {
-                "success": false,
-                "error": "Validation failed: Header userId and item's userId must be same"
-            }
-
-            const requestbody = {
-                id: 6,
-                title: 'Buy some milk',
-                completed: false,
-                userId: '3127637621763a',
-            }
-
-            mockProvider.addInteraction({
-                state: 'header userId and item userId isn\'t same',
-                uponReceiving: 'a request to add a todo item',
-                withRequest: {
-                    method: 'POST',
-                    path: '/todos',
-                    headers: requestHeaders,
-                    body: requestbody,
-                },
-                willRespondWith: {
-                    status: 401,
-                    headers: {
-                        'Content-Type': 'application/json; charset=utf-8'
-                    },
-                    body: expectedResponse
-                }
-            })
-            try {
-                const response = await TodoRequests.addTodo(baseUrl, userId, requestbody)
-            } catch(error) {
-                expect(error.response.data).toEqual(expectedResponse)
-                expect(error.response.status).toEqual(401)
-            }
-        })
-    })
-
-    describe('Updating todo item', () => {
-        it('should update a todo item', async () => {
-            const expectedResponse = {
-                "success": true
-            }
-
-            const requestbody = {
-                id: 1,
-                title: 'Buy some milk',
-                completed: true,
-                userId: userId,
-            }
-
-            mockProvider.addInteraction({
-                state: 'a todo item is updated',
-                uponReceiving: 'a request to update a todo item',
-                withRequest: {
-                    method: 'PUT',
-                    path: '/todos',
-                    headers: requestHeaders,
-                    body: requestbody,
-                },
-                willRespondWith: {
-                    status: 200,
-                    headers: {
-                        'Content-Type': 'application/json; charset=utf-8'
-                    },
-                    body: expectedResponse
-                }
-            })
-
-            const response = await TodoRequests.updateTodo(baseUrl, userId, requestbody)
-            expect(response.data).toEqual(expectedResponse)
-        })
-
-        it('should return an error when updating a todo item', async () => {
-            const expectedResponse = {
-                "success": false,
-                "error": "Validation failed: Title can't be blank"
-            }
-
-            const requestbody = {
-                id: 1,
-                title: '',
-                completed: false,
-                userId: userId,
-            }
-
-            mockProvider.addInteraction({
-                state: 'a todo item is not updated',
-                uponReceiving: 'a request to update a todo item',
-                withRequest: {
-                    method: 'PUT',
-                    path: '/todos',
-                    headers: requestHeaders,
-                    body: requestbody,
-                },
-                willRespondWith: {
-                    status: 400,
-                    headers: {
-                        'Content-Type': 'application/json; charset=utf-8'
-                    },
-                    body: expectedResponse
-                }
-            })
-            try {
-                const response = await TodoRequests.updateTodo(baseUrl, userId, requestbody)
-            } catch(error) {
-                expect(error.response.data).toEqual(expectedResponse)
-                expect(error.response.status).toEqual(400)
-            }
-        })
-    })
 
     describe('Deleting todo item', () => {
         const todoId = 1
@@ -288,8 +290,8 @@ describe('Todo Service', () => {
             }
 
             const requestbody = {
-                id: 1,
-                title: 'Buy some milk',
+                id: "10",
+                text: 'Buy some milk',
                 completed: true,
                 userId: userId,
             }

@@ -1,0 +1,170 @@
+{
+  "consumer": {
+    "name": "Todo Client"
+  },
+  "provider": {
+    "name": "Todo API"
+  },
+  "interactions": [
+    {
+      "description": "a request to update a todo item",
+      "providerState": "a todo item is updated",
+      "request": {
+        "method": "PUT",
+        "path": "/todos",
+        "headers": {
+          "Accept": "application/json",
+          "X-User-Id": "Do9030213a-8d03-4e8d-aae2-762989d54399tO"
+        },
+        "body": {
+          "id": "10",
+          "text": "Buy some milk",
+          "completed": true,
+          "userId": "Do9030213a-8d03-4e8d-aae2-762989d54399tO"
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "body": {
+          "success": true
+        }
+      }
+    },
+    {
+      "description": "a request to update a todo item",
+      "providerState": "a todo item is not updated",
+      "request": {
+        "method": "PUT",
+        "path": "/todos",
+        "headers": {
+          "Accept": "application/json",
+          "X-User-Id": "Do9030213a-8d03-4e8d-aae2-762989d54399tO"
+        },
+        "body": {
+          "id": "10",
+          "text": "",
+          "completed": false,
+          "userId": "Do9030213a-8d03-4e8d-aae2-762989d54399tO"
+        }
+      },
+      "response": {
+        "status": 400,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "body": {
+          "success": false,
+          "error": "Validation failed: Text can't be blank"
+        }
+      }
+    },
+    {
+      "description": "a request for todos",
+      "providerState": "there are 2 todos",
+      "request": {
+        "method": "GET",
+        "path": "/todos",
+        "headers": {
+          "Accept": "application/json",
+          "X-User-Id": "Do9030213a-8d03-4e8d-aae2-762989d54399tO"
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "body": {
+          "todos": [
+            {
+              "id": "20",
+              "text": "Buy milk",
+              "userId": "Do9030213a-8d03-4e8d-aae2-762989d54399tO",
+              "completed": false
+            },
+            {
+              "id": "21",
+              "text": "Buy eggs",
+              "userId": "Do9030213a-8d03-4e8d-aae2-762989d54399tO",
+              "completed": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "a request for todos",
+      "providerState": "there are no todos",
+      "request": {
+        "method": "GET",
+        "path": "/todos",
+        "headers": {
+          "Accept": "application/json",
+          "X-User-Id": "Do9030213a-8d03-4e8d-aae2-762989d54399tO"
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "body": {
+          "todos": [
+
+          ]
+        }
+      }
+    },
+    {
+      "description": "a request to delete a todo item",
+      "providerState": "a todo item is deleted",
+      "request": {
+        "method": "DELETE",
+        "path": "/todos/1",
+        "headers": {
+          "Accept": "application/json",
+          "X-User-Id": "Do9030213a-8d03-4e8d-aae2-762989d54399tO"
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "body": {
+          "success": true
+        }
+      }
+    },
+    {
+      "description": "a request to delete a todo item",
+      "providerState": "a todo item is not deleted",
+      "request": {
+        "method": "DELETE",
+        "path": "/todos/1",
+        "headers": {
+          "Accept": "application/json",
+          "X-User-Id": "Do9030213a-8d03-4e8d-aae2-762989d54399tO"
+        }
+      },
+      "response": {
+        "status": 401,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "body": {
+          "success": false,
+          "error": "Authorization failed: You're unauthorized to delete this todo item"
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}
