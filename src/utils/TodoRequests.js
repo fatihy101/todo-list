@@ -18,7 +18,7 @@ class TodoRequests {
   }
 
   static addTodo(baseUrl, userId, todo) {
-    return axios.post(`${baseUrl}/todos`, JSON.stringify(todo), {
+    return axios.post(`${baseUrl}/todos`, todo, {
         headers: this.createHeaders(userId)
     })
   }
