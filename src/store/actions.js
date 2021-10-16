@@ -61,8 +61,19 @@ export default {
 
   },
 
-  clearTodos({ commit }) {
-    commit('CLEAR_TODOS')
+ async clearTodos({ commit, state }) {
+    try {
+      const res = await TodoRequests.clearTodos(apiURL, state.userId)
+      if(res.status === 200) {
+      commit('CLEAR_TODOS')
+      }
+      else {
+        console.log(`with ${res.status} error: ${res.body}`)
+
+      }
+    } catch(error) {
+      console.log(error)
+    }
   },
 
   async fetchTodos({ commit, state }) {

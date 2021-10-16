@@ -11,7 +11,7 @@ export default {
     UPDATE_TODO(state, todo) {
         state.todos.splice(state.todos.findIndex((item) => todo.id === item.id), 1, todo)
     },
-    CLEAR_TODOS(state) {
+    DELETE_ALL_ITEMS(state) {
         state.todos = []
     },
     FETCH_TODOS(state, todos) {

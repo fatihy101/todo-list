@@ -55,20 +55,6 @@ describe('mutations', () => {
         }])
     })
 
-    it('should clear all todo items', () => {
-        const state = {
-            todos: [{
-                id: 1,
-                text: 'test',
-                completed: false
-            }]
-        }
-
-        mutations.CLEAR_TODOS(state)
-
-        expect(state.todos).toEqual([])
-    })
-
     it('should fetch todo items', () => {
         const state = {
             todos: []
@@ -100,4 +86,39 @@ describe('mutations', () => {
         mutations.SET_USER_ID(state, data)
         expect(state.userId).toEqual(data)
     })
+
+    it("should delete all items for one item", () => {
+        const state = {
+            todos: [{
+                id: 1,
+                text: "test",
+                completed: false,
+                userId: "testId"
+            }]
+        }
+
+        mutations.CLEAR_TODOS(state)
+        expect(state.todos).toEqual([])
+    })
+
+    it("should delete all items for multple items in array", () => {
+        const state = {
+            todos: [{
+                id: 1,
+                text: "test",
+                completed: false,
+                userId: "testId"
+            },
+            {
+                id: 2,
+                text: "tes2",
+                completed: false,
+                userId: "testId"
+            }
+        ]
+        }
+        mutations.CLEAR_TODOS(state)
+        expect(state.todos).toEqual([])
+    })
+
 })

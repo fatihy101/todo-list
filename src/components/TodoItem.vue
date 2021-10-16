@@ -58,7 +58,13 @@ export default {
   justify-content: space-between;
   padding: 0.5rem;
   border-bottom: 1px solid #ccc;
-  width: 51vw;
+  max-width: 60vw;
+  min-width: 50vw;
+
+  cursor: grab;
+  &:active {
+    cursor: grabbing;
+  }
   &__text {
     font-weight: 700;
     color: black;
@@ -67,6 +73,7 @@ export default {
   &__checkbox {
     margin-left: 15px;
     transform: scale(1.4);
+    cursor: pointer;
   }
 
   &__delete-button {

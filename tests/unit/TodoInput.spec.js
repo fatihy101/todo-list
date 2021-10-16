@@ -7,9 +7,22 @@ describe("TodoInput.vue", () => {
     let wrapper
     beforeEach(() => {
         // prepare the mock
-        store = createStore()
+        store = createStore({
+            state: {
+                todos: [{
+                    id: 1,
+                    text: "test",
+                    completed: false,
+                    userId: "testId"
+                }]
+            }
+        })
         store.dispatch = jest.fn()
-        wrapper = shallowMount(TodoInput, { global: { plugins: [store] } })
+        wrapper = shallowMount(TodoInput, {
+            global: {
+                plugins: [store]
+            }
+        })
     })
 
     afterEach(() => {
@@ -38,5 +51,26 @@ describe("TodoInput.vue", () => {
         await wrapper.find("input").setValue("test")
         await wrapper.find("button").trigger("click")
         expect(wrapper.find("div.todo-input").classes()).not.toContain("shake")
+    })
+
+    it("should exist delete-button", () => {
+        expect(wrapper.find(".delete-button").exists()).toBe(true)
+    })
+
+    it("Should call deleteItems when cilcked the button", () => {
+        wrapper.find(".delete-button").trigger("click")
+        expect(store.dispatch).toHaveBeenCalledWith("clearTodos")
+    })
+
+    it("should delete all items deleteItems clicked", async () => {
+        store.state.todos = [{
+            id: 1,
+            text: "test",
+            completed: false,
+            userId: "testId"
+        }]
+        await wrapper.find(".delete-button").trigger("click")
+        expect(store.state.todos.length).toBe(0)
+
     })
 })
